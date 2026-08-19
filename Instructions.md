@@ -7,8 +7,8 @@
 
 ## 2.  Accessing the environment.
 - The system is located at https://sn.ws.broadcom.com
-- Your login: is _SNCUST001
-- The password is SN_PASSWORD
+- Your login: is mfwsuser1@demo.broadcom.com
+- The password is Handsonlab@2026
 
 One you log in, select the environment:
 ![simpleCommand](assets/content/login.png)
