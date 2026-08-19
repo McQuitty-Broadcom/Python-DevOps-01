@@ -19,9 +19,9 @@ pipeline {
                 sh '$VENV/bin/duty build'
             }
         }
-        stage('deploy') {
+        stage('run') {
             steps {
-                sh '$VENV/bin/duty deploy'
+                sh '$VENV/bin/duty run'
             }
         }
     }
