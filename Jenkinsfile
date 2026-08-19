@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'agent1' }
+    environment {
+        VENV = '/home/user1/workspace/venv'
+    }
     stages {
         stage('local setup') {
             steps {
@@ -7,26 +10,25 @@ pipeline {
                 sh 'npm --version'
                 sh 'zowe --version'
                 sh 'zowe plugins list'
-                sh '. /home/user1/workspace/venv/bin/activate'
-                // sh 'python3.10 -m pip install --no-index --find-links ./duty-offline-install/wheelhouse-linux-py310/ duty==1.9.0 dotmap==1.3.30'
-
-        }
+                sh 'python3 -m venv $VENV --clear'
+                sh '$VENV/bin/python -m pip install --no-index --find-links ./duty-offline-install/wheelhouse-linux-py313/ duty==1.9.0 dotmap==1.3.30'
+            }
         }
         stage('build') {
             steps {
-                    sh 'duty build'
+                sh '$VENV/bin/duty build'
             }
         }
         stage('deploy') {
             steps {
-                    sh 'duty deploy'
+                sh '$VENV/bin/duty deploy'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'output/**/*.*' 
+            archiveArtifacts artifacts: 'output/**/*.*'
         }
     }
 }
