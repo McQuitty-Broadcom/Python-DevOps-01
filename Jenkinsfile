@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'zowe-agent' }
+    agent { label 'agent1' }
     stages {
         stage('local setup') {
             steps {
