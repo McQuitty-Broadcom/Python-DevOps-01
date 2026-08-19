@@ -29,7 +29,7 @@ This is just information for you.  The details have been stored in your zowe.con
 ## 4. DOGGOS
 If you have been to previous Broadcom workshops, you may be familiar with DOGGOS.  It's an application to track dog adoptions.  This version is a batch application.  The assets are tracked in Endevor.  Rather than spending time modifying the application, we are going to simply build and execute the application.  After that, the application will be deployed and run, via some job actions.  
 
-As part of your learning, the important aspects are understating how to automate commands (such as downloading code, generating code) and jobs (submitting, downloading output).
+As part of your learning, the important aspects are understanding how to automate commands (such as downloading code, generating code) and jobs (submitting, downloading output).
 
 Finally, we want to automate the job so it can be run from a pipeline tool, such as Jenkins.  
 
@@ -42,11 +42,11 @@ Finally, we want to automate the job so it can be run from a pipeline tool, such
   - Issue `git help`
   - Issue `duty --help`
 
-  - We will be using Duty, ap Python framework, to automate our actions.  
+  - We will be using Duty, a Python framework, to automate our actions.  
 
 ## 6. Building the code.  
 
-In order to automate the build of an application, we need to build it manually first.  Our application has 2 parts, a COBOL file, which has dependencies on COPYBOOKS.  And it also has an LNK file.  We much build each of those manually to ensure we don't have any errors.
+In order to automate the build of an application, we need to build it manually first.  Our application has 2 parts, a COBOL file, which has dependencies on COPYBOOKS.  And it also has an LNK file.  We must build each of those manually to ensure we don't have any errors.
 
 - Run the following commands and ensure we get a 0000 return code:
   - `zowe endevor generate DOGGOS01 --type COBOL --os --maxrc 0 --sn 1 --cb`
@@ -66,9 +66,9 @@ If you have any issues with these commands, reach out to the instructions.
 - This is a batch application.  Once it is compiled, this application is ready to run.
 
 - To execute the application and see the output, we can call `zowe jobs`.
-  - `zowe jobs submit dataset _CUSTOMER_NAME_.PUBLIC.JCL(NDRUNDOG) --vasc`
+  - `zowe jobs submit dataset CUST001.PUBLIC.JCL(NDRUNDOG) --vasc`
 
-- `--vacs` is a great command when testing.  The output is displayed across your screen when the job completes.  For jobs like this one, we can see the job output and esnure the application runs. 
+- `--vasc` is a great command when testing.  The output is displayed across your screen when the job completes.  For jobs like this one, we can see the job output and ensure the application runs. 
 
 - You should see output with dog adoptions like this:
 ![Graphic 1 from slide 18](assets/content/doggos_output.png)
@@ -106,7 +106,7 @@ The top of the file contains import statements. These import libraries to suppor
 - Python is indention based, similar to COBOL.  Indentation matters. 
 - "def build_cobol(ctx):" is a function.
   - def: Declares we are creating a function
-  - buid_cobol: This is the function name
+  - build_cobol: This is the function name
   - (ctx): This is a list of parameters.  In this case, we are passing a context object.  You'll also see that for the commands we call.
 
 - """ ... """ indicates a multiline comment.  Using Duty, it is also the description of the task we are calling.  This is a user friendly term used when accessing duty.  
@@ -116,7 +116,7 @@ The top of the file contains import statements. These import libraries to suppor
 ## 11. Decorators
 The decorator @Duty defines the next function as the task name.
 
-Looking at the current imeplmentation of build_cobol:
+Looking at the current implementation of build_cobol:
 ```python
 @duty
 def build_cobol(ctx):
@@ -154,13 +154,13 @@ Close zowesupport.py.
 Using the `def build_cobol(ctx):` function, let's modify the command line. 
 It currently shows `command = "echo build cobol"` but we need it to run the build command we used earlier.
 
-There's a feature in Python strings called interpolation.  It's a fancy word for using symbols to substite variable values.  Instead of regular string concatenation, this allows us to write everything in-line, making it more readble.  Interpolated strings start with f like f"This is my {varname}".
+There's a feature in Python strings called interpolation.  It's a fancy word for using symbols to substitute variable values.  Instead of regular string concatenation, this allows us to write everything in-line, making it more readable.  Interpolated strings start with f like f"This is my {varname}".
 
-Let's change the command string to look like our command, but let's import values from a configuration file.  We are using `config.json` to cotain value names.  So, if we pass config.value, it will substitute the value for us.
+Let's change the command string to look like our command, but let's import values from a configuration file.  We are using `config.json` to contain value names.  So, if we pass config.value, it will substitute the value for us.
 
 This allows us to reuse the same file and simply change the configuration file to work with similar applications.
 
-Open the config.json file and note it cotains values like "Element".
+Open the config.json file and note it contains values like "Element".
 
 Close the file and back in duties.py, let's modify that command value in the build-cobol section to look like:
 
@@ -178,7 +178,7 @@ We've successfully build the COBOL program in the last step.  We can literally c
 Make it look like this:
 `command = f"zowe endevor generate element {config.element} --type LNK --os --maxrc 0 --sn 1 --cb"`
 
-The entire function should looke like this:
+The entire function should look like this:
 ```python
 @duty
 def build_lnk(ctx):
@@ -224,7 +224,7 @@ But now we have a function to download the job, capture output values and retun 
     - folder: This is the folder where the output is stored
     - max return code:  This is a number indicating when an error should be reported
 
-If you right click on the submitJobAndDownloadOutput function, it takes you to zowesupport.  This is were the function is defined.
+If you right click on the submitJobAndDownloadOutput function, it takes you to zowesupport.  This is where the function is defined.
 
 ![submitJobAndDownloadOutput](assets/content/submitJobAndDownloadOutput.png)
 
@@ -262,9 +262,9 @@ def run(ctx):
 
 This will download the output to the `output/job-archive` folder, with each spool file being in a directory named after the job.
 
-Run `duty run` and check the output/job-arhive folder.  
+Run `duty run` and check the output/job-archive folder.  
 
-The output will list the job number.  Using the job number, look in the output/job-archive folder, find the job folder, expand the RUN folder, and view the OUTREP.txt file.  This is the ouptut of the program.
+The output will list the job number.  Using the job number, look in the output/job-archive folder, find the job folder, expand the RUN folder, and view the OUTREP.txt file.  This is the output of the program.
 
 You've now successfully automated the build and running process of DOGGOS.
 
@@ -276,16 +276,16 @@ Open `Jenkinsfile` and look at the structure.  The language is called Groovy.
 ![jenkinsfile](assets/content/jenkins_file.png)
 
 ## 19. Reviewing Jenkinsfile
-`pipeline` defines the start of the pipeline object.  Everything within the block in pipleline work.
+`pipeline` defines the start of the pipeline object.  Everything within the block in pipeline work.
 `agent` defines where the code will actually run.  There's an agent defined in Jenkins and this says which one to use.
-`environment` defines any environment variables.  In this case, we are creating a folder with a virtual enivornment to store temporary files.
+`environment` defines any environment variables.  In this case, we are creating a folder with a virtual environment to store temporary files.
 
 `stages` are the actual devops stages.  We've defined `local setup`, `build` and `run`.
 
 `post` is something that runs after the build has completed.
 
 ## 20. Local Setup
-A local setup area can be usefule for doing pre-checks, setting up environments, and performing housekeeping.
+A local setup area can be useful for doing pre-checks, setting up environments, and performing housekeeping.
 
 In this case, we are printing the version of the common tools being used.  
 The `python3 -m venv $VENV --clear` command sets up a new virtual environment.
@@ -309,7 +309,7 @@ We then need to push them to a remote system, so Jenkins can get the file and ru
 
 `git push`
 
-This should push the files to Github so Jenkins will be updated.
+This should push the files to GitHub so Jenkins will be updated.
 
 ## 24. Setting up Jenkins Pipeline
 
@@ -341,7 +341,7 @@ This will allow us to create a new build.
 In the "Enter an Item Name" field, enter:
 Python-DevOps-CUST001
 
-This will give you an unique name for your build and not conflict with another user.
+This will give you a unique name for your build and not conflict with another user.
 
 Then select Pipeline and click next.
 
@@ -354,8 +354,8 @@ Change the value from Pipeline script to Pipeline script from SCM.
 
 Change SCM from none to git.  The screen will change adding new fields.
 
-The respository URL will be `https://github.com/McQuitty-Broadcom/Python-DevOps-01.git`
-Change the "Branch Specifier (blank for 'any')" to */main (it current is */master).
+The repository URL will be `https://github.com/McQuitty-Broadcom/Python-DevOps-01.git`
+Change the "Branch Specifier (blank for 'any')" to */main (it currently is */master).
 
 Scroll to the bottom and select "SAVE".
 
