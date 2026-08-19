@@ -2,9 +2,6 @@ import sys; sys.path.append('./')
 
 from duty import duty
 from zowesupport import *
-
-# Commands to Run
-
     
 @duty
 def run(ctx):
